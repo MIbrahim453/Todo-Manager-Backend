@@ -1,5 +1,6 @@
 import express from "express";
 import cors from "cors";
+import cookieParser from "cookie-parser";
 import authRoutes from "./routes/auth.routes.js";
 import userRoutes from "./routes/user.routes.js";
 import todoRoutes from "./routes/todo.routes.js";
@@ -15,12 +16,9 @@ app.use(
 );
 
 app.use(express.json());
+app.use(cookieParser());
 app.use(express.urlencoded({ extended: true }));
-app.use(express.static("public"));
-
-app.get("/", (req, res) => {
-  res.send("Server Started!");
-});
+app.use(express.static("public"))
 
 app.use(`${API_PREFIX}/auth`, authRoutes);
 app.use(`${API_PREFIX}/user`, userRoutes);
