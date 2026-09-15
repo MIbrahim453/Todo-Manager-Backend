@@ -10,7 +10,7 @@ const PORT = process.env.PORT;
 connectDB()
   .then(() => {
     app.listen(PORT || 3000, () =>
-      console.log(`Server Started at http://localhost:${PORT}`),
+      console.log(`Server Started at ${PORT}`),
     );
   })
   .catch((error) => {

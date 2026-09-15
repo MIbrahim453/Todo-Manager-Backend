@@ -16,9 +16,12 @@ app.use(
 );
 
 app.use(express.json());
-app.use(cookieParser());
 app.use(express.urlencoded({ extended: true }));
-app.use(express.static("public"))
+app.use(express.static("public"));
+
+app.get("/", (req, res) => {
+  res.send("Server Started!");
+});
 
 app.use(`${API_PREFIX}/auth`, authRoutes);
 app.use(`${API_PREFIX}/user`, userRoutes);
