@@ -10,19 +10,15 @@ if (!firebaseServiceAccount) {
     "FIREBASE_SERVICE_ACCOUNT is not loaded. Firebase admin will not be initialized.",
   );
 } else {
-  try {
-    const serviceAccount = JSON.parse(firebaseServiceAccount);
+  const serviceAccount = JSON.parse(firebaseServiceAccount);
 
-    if (!admin.getApps().length) {
-      admin.initializeApp({
-        credential: admin.cert(serviceAccount),
-      });
-    }
-
-    auth = getAuth();
-  } catch (error) {
-    console.error("FIREBASE_SERVICE_ACCOUNT initialization error:", error.message);
+  if (!admin.getApps().length) {
+    admin.initializeApp({
+      credential: admin.cert(serviceAccount),
+    });
   }
+
+  auth = getAuth();
 }
 
 export { auth };
