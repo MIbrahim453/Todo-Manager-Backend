@@ -191,6 +191,14 @@ const refreshToken = async (req, res) => {
       _id: verifyToken.id,
       email: verifyToken.email,
     });
+
+    if (!user) {
+      return res.status(401).json({
+        success: false,
+        message: "User no longer exists",
+      });
+    }
+
     const token = generateToken(user);
 
     return res.status(200).json({
@@ -200,7 +208,7 @@ const refreshToken = async (req, res) => {
     });
   } catch (error) {
     console.log("Error occurred while generating Token:", error);
-    return res.status(500).json({
+    return res.status(401).json({
       success: false,
       message: error?.message || "Error occurred while generating Token",
     });
