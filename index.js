@@ -7,7 +7,6 @@ import todoRoutes from "./routes/todo.routes.js";
 import { connectDB } from "./config/db.connection.js";
 
 const app = express();
-connectDB();
 const API_PREFIX = "/api/v1";
 
 app.use(
@@ -21,8 +20,21 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use(express.static("public"));
 
+app.get("/", (_req, res) => {
+  res.status(200).json({ message: "Todo Manager API is running" });
+});
+
 app.get(`${API_PREFIX}/health`, (_req, res) => {
   res.status(200).json({ message: "Server is running" });
+});
+
+app.use(async (_req, _res, next) => {
+  try {
+    await connectDB();
+    next();
+  } catch (error) {
+    next(error);
+  }
 });
 
 app.use(`${API_PREFIX}/auth`, authRoutes);
@@ -30,6 +42,9 @@ app.use(`${API_PREFIX}/user`, userRoutes);
 app.use(`${API_PREFIX}/todo`, todoRoutes);
 
 const PORT = process.env.PORT || 3000;
-app.listen(PORT, () =>
-  console.log(`Server Started at ${PORT}`),
-);
+
+if (process.env.VERCEL !== "1") {
+  app.listen(PORT, () => console.log(`Server Started at ${PORT}`));
+}
+
+export default app;
