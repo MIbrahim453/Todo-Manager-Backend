@@ -3,7 +3,13 @@ import app from "./app.js"
 import { connectDB } from "./config/db.connection.js"
 import dns from "dns"
 
-dns.setServers(['8.8.8.8', '8.8.4.4']);
+if (!process.env.VERCEL) {
+  try {
+    dns.setServers(['8.8.8.8', '8.8.4.4']);
+  } catch (e) {
+    console.warn("Could not set custom DNS servers:", e.message);
+  }
+}
 
 const PORT = process.env.PORT
 connectDB()
