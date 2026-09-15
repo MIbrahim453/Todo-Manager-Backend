@@ -9,9 +9,13 @@ import { connectDB } from "./config/db.connection.js";
 const app = express();
 const API_PREFIX = "/api/v1";
 
+const allowedOrigin = process.env.FRONTEND_URL
+  ? process.env.FRONTEND_URL.replace(/\/$/, "")
+  : true;
+
 app.use(
   cors({
-    origin: process.env.FRONTEND_URL,
+    origin: allowedOrigin,
     credentials: true,
   }),
 );
@@ -41,6 +45,14 @@ app.use(`${API_PREFIX}/auth`, authRoutes);
 app.use(`${API_PREFIX}/user`, userRoutes);
 app.use(`${API_PREFIX}/todo`, todoRoutes);
 
+app.use((err, _req, res, _next) => {
+  console.error("Server Error:", err);
+  res.status(err.status || 500).json({
+    success: false,
+    message: err.message || "Internal Server Error",
+  });
+});
+
 const PORT = process.env.PORT || 3000;
 
 if (process.env.VERCEL !== "1") {
@@ -48,3 +60,4 @@ if (process.env.VERCEL !== "1") {
 }
 
 export default app;
+

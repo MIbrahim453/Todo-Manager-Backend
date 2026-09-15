@@ -1,6 +1,6 @@
 import User from "../models/user.model.js";
 import jwt from "jsonwebtoken";
-import bcrypt from "bcrypt";
+import bcrypt from "bcryptjs";
 import { auth } from "../config/firebase.js";
 
 const generateToken = (user) => {
@@ -55,6 +55,10 @@ const signUp = async (req, res) => {
     });
   } catch (error) {
     console.log("Error occurred while creating user:", error);
+    return res.status(500).json({
+      success: false,
+      message: error?.message || "Error occurred while creating user",
+    });
   }
 };
 
@@ -93,6 +97,10 @@ const login = async (req, res) => {
     });
   } catch (error) {
     console.log("Error occurred while login user:", error);
+    return res.status(500).json({
+      success: false,
+      message: error?.message || "Error occurred while login user",
+    });
   }
 };
 
@@ -192,6 +200,10 @@ const refreshToken = async (req, res) => {
     });
   } catch (error) {
     console.log("Error occurred while generating Token:", error);
+    return res.status(500).json({
+      success: false,
+      message: error?.message || "Error occurred while generating Token",
+    });
   }
 };
 
@@ -203,6 +215,10 @@ const logout = async (req, res) => {
     });
   } catch (error) {
     console.log("Error occurred while logging out:", error);
+    return res.status(500).json({
+      success: false,
+      message: error?.message || "Error occurred while logging out",
+    });
   }
 };
 export { signUp, login, googleLogin, refreshToken, logout };

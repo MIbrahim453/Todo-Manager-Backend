@@ -23,6 +23,10 @@ const verifyJWT = async (req, res, next) => {
     next();
   } catch (error) {
     console.log("Error occurred while verifying request:", error);
+    return res.status(401).json({
+      success: false,
+      message: error.message || "Invalid or expired access token",
+    });
   }
 };
 

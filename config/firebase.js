@@ -21,7 +21,7 @@ if (!firebaseServiceAccount) {
 
     auth = getAuth();
   } catch (error) {
-    console.error("FIREBASE_SERVICE_ACCOUNT is invalid:", error.message);
+    console.error("FIREBASE_SERVICE_ACCOUNT initialization error:", error.message);
   }
 }
 
