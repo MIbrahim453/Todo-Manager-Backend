@@ -22,7 +22,7 @@ const getMe = async (req, res) => {
 };
 const getAllUsers = async (req, res) => {
   try {
-    const allUsers = await User.find();
+    const allUsers = await User.find().select("-password");
      const adminUsers = await User.countDocuments({ role: "admin" });
     const memberUsers = await User.countDocuments({ role: "member" });
 
@@ -61,7 +61,10 @@ const getAllUsers = async (req, res) => {
 
 const recentUsers = async (req, res) => {
   try {
-    const recentUsers = await User.find().sort({ createdAt: -1 }).limit(5);
+    const recentUsers = await User.find()
+      .select("-password")
+      .sort({ createdAt: -1 })
+      .limit(5);
 
     return res.status(200).json({
       success: true,

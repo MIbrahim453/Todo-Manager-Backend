@@ -47,11 +47,12 @@ const signUp = async (req, res) => {
       password: hashPassword,
       role: "member",
     });
+    const user = await User.findById(createUser._id).select("-password");
 
     return res.status(201).json({
       success: true,
       message: "User created successfully",
-      data: createUser,
+      data: user,
     });
   } catch (error) {
     console.log("Error occurred while creating user:", error);
@@ -85,12 +86,13 @@ const login = async (req, res) => {
     }
 
     const token = generateToken(user);
+    const userWithoutPassword = await User.findById(user._id).select("-password");
 
     return res.status(200).json({
       success: true,
       message: "User login successfully",
       data: {
-        user: user,
+        user: userWithoutPassword,
         accessToken: token.accessToken,
         refreshToken: token.refreshToken,
       },
@@ -123,7 +125,9 @@ const googleLogin = async (req, res) => {
       });
     }
 
-    const existingUser = await User.findOne({ email: decodedToken.email });
+    const existingUser = await User.findOne({ email: decodedToken.email }).select(
+      "-password",
+    );
     if (existingUser) {
       const token = generateToken(existingUser);
       return res.status(200).json({
@@ -145,6 +149,7 @@ const googleLogin = async (req, res) => {
       role: "member",
       profilePhoto: decodedToken.picture,
     });
+    const user = await User.findById(createUser._id).select("-password");
 
     const token = generateToken(createUser);
 
@@ -152,7 +157,7 @@ const googleLogin = async (req, res) => {
       success: true,
       message: "User created successfully and Login Successfully",
       data: {
-        user: createUser,
+        user,
         accessToken: token.accessToken,
         refreshToken: token.refreshToken,
       },
